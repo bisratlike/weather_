@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 
+
 import "./globals.css";
 import Header from "../components/Header";
-
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "Weather App",
@@ -15,9 +16,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
-      <Header/>
-      {children}
-    </div>
+    <html lang="en">
+      <body>
+        <Providers> {/* Wrap with Providers to ensure global context access */}
+          <Header />
+          <main>
+           
+            {children}</main>
+        </Providers>
+      </body>
+    </html>
   );
 }

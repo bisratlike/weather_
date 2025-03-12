@@ -1,0 +1,105 @@
+--- File: app/layout.tsx ---
+import type { Metadata } from "next";
+
+import "./globals.css";
+import Header from "../components/Header";
+
+
+export const metadata: Metadata = {
+  title: "Weather App",
+  description: "see the weather",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <div>
+      <Header/>
+      {children}
+    </div>
+  );
+}
+
+
+--- File: app/_app.tsx ---
+import React from 'react';
+import { AppProps } from 'next/app';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
+import '../styles/globals.css'; // Make sure Tailwind CSS is imported
+
+
+const queryClient = new QueryClient();
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider withNormalizeCSS>
+        {/* Global notifications */}
+        <Notifications />
+        
+        
+        <Component {...pageProps} />
+      </MantineProvider>
+    </QueryClientProvider>
+  );
+}
+
+export default MyApp;
+
+
+--- File: app/page.tsx ---
+import WeatherSearch from "../components/WeatherSearch";
+
+export default function Home() {
+
+  <div>
+ return <WeatherSearch />;
+  </div>
+ 
+}
+
+--- File: components/WeatherSearch.tsx ---
+// components/WeatherSearch.tsx
+"use client"; 
+
+import { useState } from "react";
+import { TextInput, Loader } from "@mantine/core";
+import { useWeather } from "../libs/UseWeather";
+
+export default function WeatherSearch() {
+  const [city, setCity] = useState("");
+  const { data, isLoading, error }: { data: { main: { temp: number } } } = useWeather(city);
+  return (
+    <div className="max-w-md mx-auto space-y-4">
+      {/* Search Input */}
+      <TextInput
+        label="Search by City"
+        placeholder="Enter city"
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
+        className="w-full"
+      />
+
+      {/* Weather Data */}
+      {isLoading && <Loader />}
+      {error && <p className="text-red-500">{(error as any).message}</p>}
+      {data && (
+        <div className="mt-4">
+          <h2 className="text-xl">{data.name}</h2>
+          <p>Temperature: {data.main.temp}°C</p>
+          <p>Weather: {data.weather[0].description}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+--- File: components/Header.tsx ---
+
+
