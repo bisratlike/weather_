@@ -1,11 +1,31 @@
-import { Card } from "@mantine/core";
+"use client";
+import { getWeatherEmoji } from "@/app/utils/weatherEmojis";
+import { WeatherData } from "@/types/useWeather";
 
-export default function WeatherCard({ data }: { data: any }) {
+interface WeatherDisplayProps {
+  weatherData: WeatherData;
+}
+
+export function WeatherDisplay({ weatherData }: WeatherDisplayProps) {
+  const weatherEmoji = getWeatherEmoji(weatherData.weather[0].id);
+
   return (
-    <Card shadow="lg" padding="xl" radius="lg" className="text-center w-full bg-gradient-to-r from-blue-400 to-D1EAF0-500 text-white">
-      <h2 className="text-2xl font-bold">{data.name}</h2>
-      <p className="text-lg font-medium">Temperature: {data.main.temp}°C</p>
-      <p className="text-lg capitalize">{data.weather[0].description}</p>
-    </Card>
+    <div className="space-y-2">
+      <h2 className="text-2xl font-bold">
+        {weatherData.name}, {weatherData.sys.country} {weatherEmoji}
+      </h2>
+      <div className="text-xl">
+        <p>Temperature: {weatherData.main.temp.toFixed(1)}°C</p>
+        <p>Feels like: {weatherData.main.feels_like.toFixed(1)}°C</p>
+        <p>Weather: {weatherData.weather[0].description}</p>
+        <p>Humidity: {weatherData.main.humidity}% 💧</p>
+        <p>Wind: {weatherData.wind.speed} m/s 💨</p>
+        <img
+          src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`}
+          alt="Weather icon"
+          className="mx-auto"
+        />
+      </div>
+    </div>
   );
 }
