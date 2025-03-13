@@ -1,18 +1,24 @@
-"use client"; // Needed because providers contain client-side logic
+"use client";
 
 import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider, createTheme } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
+import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 
 const queryClient = new QueryClient();
+
+const theme = createTheme({
+  primaryColor: "blue",
+});
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <MantineProvider >
+      <MantineProvider theme={theme} defaultColorScheme="light">
         <Notifications />
-        {children} 
+        {children}
       </MantineProvider>
     </QueryClientProvider>
   );
